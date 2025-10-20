@@ -141,28 +141,21 @@ function createPopupContent(listing) {
     if (photos && photos.length > 0) {
         photosHTML = `
             <div class="photos-gallery">
-                <div class="photos-title">📸 Rasmlar (${photos.length} ta)</div>
-                <div class="photos-grid">
-                    ${photos.map((photo, index) => {
-                        const photoUrl = getPhotoUrl(photo);
-                        return `
-                            <div class="photo-item">
-                                <img src="${photoUrl}" 
-                                     alt="E'lon rasmi ${index + 1}" 
-                                     loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/150/3498db/ffffff?text=Rasm+Yuklanmadi'">
-                            </div>
-                        `;
-                    }).join('')}
+                <div class="photos-slider">
+                    ${photos.map((photo, index) => `
+                        <img src="${getPhotoUrl(photo)}"
+                             alt="E'lon rasmi ${index + 1}"
+                             loading="lazy"
+                             onerror="this.src='https://via.placeholder.com/300x200/3498db/ffffff?text=Rasm+Yuklanmadi'">
+                    `).join('')}
                 </div>
+                <div class="photo-count">${photos.length} ta rasm</div>
             </div>
         `;
     } else {
         photosHTML = `
             <div class="photos-gallery">
-                <div class="photo-placeholder">
-                    📸 Rasmlar mavjud emas
-                </div>
+                <div class="photo-placeholder">📸 Rasmlar mavjud emas</div>
             </div>
         `;
     }
@@ -375,4 +368,5 @@ function debugPhotos() {
 document.addEventListener('DOMContentLoaded', function() {
     initMap();
     window.debugPhotos = debugPhotos;
+
 });
