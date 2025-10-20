@@ -10,27 +10,44 @@ let markerCluster;
 function initMap() {
     // O'zbekiston markazi
     const defaultCenter = [41.2995, 69.2401];
-    
+
     // Xaritani yaratish
-    map = L.map('map').setView(defaultCenter, 12);
-    
-    // Xarita tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    map = L.map('map', {
+        zoomControl: true,
+        attributionControl: true
+    }).setView(defaultCenter, 12);
+
+    // Retina (hi-res) tile layer — mobil ekranlarda tiniq ko'rinadi
+    const isRetina = L.Browser.retina;
+    const tileUrl = isRetina
+        ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}@2x.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileUrl, {
         attribution: '© OpenStreetMap contributors',
-        maxZoom: 18
+        maxZoom: 20,
+        tileSize: 256,
+        detectRetina: true, // muhim — retina ekranlar uchun avtomatik aniqlash
     }).addTo(map);
-    
+
     // Marker cluster guruhi
     markerCluster = L.markerClusterGroup({
         chunkedLoading: true,
         maxClusterRadius: 50
     });
-    
+
     map.addLayer(markerCluster);
-    
+
+    // Mobil uchun silliq zoom va touch optimizatsiya
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.disable(); // ixtiyoriy — mobil uchun foydali
+    map.invalidateSize();
+
     // E'lonlarni yuklash
     loadListings();
 }
+
 
 // Rasm URL olish
 function getPhotoUrl(fileId) {
@@ -370,3 +387,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.debugPhotos = debugPhotos;
 
 });
+
