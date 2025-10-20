@@ -12,23 +12,27 @@ function initMap() {
     const defaultCenter = [41.2995, 69.2401];
 
     // Xaritani yaratish
+    // Xaritani yaratish
     map = L.map('map', {
+        zoom: 13,
+        preferCanvas: true,       // GPU yordamida tezroq chizish
+        zoomSnap: 0.25,           // zoom bosqichlarini silliqlashtiradi
+        zoomDelta: 0.5,
+        wheelPxPerZoomLevel: 80,  // sichqoncha / touch uchun sezgirlik
         zoomControl: true,
         attributionControl: true
     }).setView(defaultCenter, 12);
-
-    // Retina (hi-res) tile layer — mobil ekranlarda tiniq ko'rinadi
-    const isRetina = L.Browser.retina;
-    const tileUrl = isRetina
-        ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}@2x.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-    L.tileLayer(tileUrl, {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 20,
-        tileSize: 256,
-        detectRetina: true, // muhim — retina ekranlar uchun avtomatik aniqlash
+    
+    // Retina (hi-res) tile layer — mobil ekranlarda tiniq ko‘rinadi
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        detectRetina: true,
+        maxZoom: 19,
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
+
 
     // Marker cluster guruhi
     markerCluster = L.markerClusterGroup({
@@ -387,4 +391,5 @@ document.addEventListener('DOMContentLoaded', function() {
     window.debugPhotos = debugPhotos;
 
 });
+
 
