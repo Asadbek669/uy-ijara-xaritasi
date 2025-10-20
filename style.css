@@ -1,3 +1,4 @@
+/* Mobil versiya uchun asosiy dizayn (≤768px) */
 * {
     margin: 0;
     padding: 0;
@@ -10,46 +11,43 @@ body {
     min-height: 100vh;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
-    -webkit-text-size-adjust: 100%;
 }
 
 .container {
-    height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 0;
+    height: 100vh;
 }
 
+/* Sarlavha (Header) */
 .header {
     text-align: center;
-    padding: 12px 15px;
+    padding: 10px 12px;
     color: white;
-    background: rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-    flex-shrink: 0;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .header h1 {
-    font-size: 1.4rem;
-    margin-bottom: 4px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    line-height: 1.2;
+    font-size: 1.3rem;
+    margin-bottom: 3px;
 }
 
 .header p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     opacity: 0.9;
-    line-height: 1.3;
 }
 
+/* Xarita */
 #map {
     flex: 1;
-    border-radius: 0;
     background: #f8f9fa;
+    border-radius: 0;
     touch-action: pan-x pan-y;
 }
 
-/* Loading styles */
+/* Yuklanish animatsiyasi */
 .loading {
     position: absolute;
     top: 50%;
@@ -62,12 +60,12 @@ body {
 
 .spinner {
     border: 3px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
     border-top: 3px solid white;
-    width: 35px;
-    height: 35px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
     animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
+    margin: 0 auto 12px;
 }
 
 @keyframes spin {
@@ -75,34 +73,33 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Error styles */
+/* Xatolik oynasi */
 .error {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
-    padding: 20px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 10px;
+    background: white;
     color: #333;
-    z-index: 1000;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    padding: 18px;
+    border-radius: 10px;
     width: 85%;
     max-width: 300px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 1000;
 }
 
 .error button {
     background: #3498db;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 15px;
-    font-size: 16px;
+    padding: 12px 18px;
+    border-radius: 6px;
     width: 100%;
-    -webkit-appearance: none;
+    margin-top: 10px;
+    font-size: 15px;
+    cursor: pointer;
 }
 
 .error button:hover {
@@ -113,203 +110,155 @@ body {
     display: none;
 }
 
-/* Listing actions styles */
-.listing-actions {
-    margin-top: 12px;
-    text-align: center;
-}
-
-.details-btn {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 12px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background 0.3s ease;
-    width: 100%;
-    -webkit-appearance: none;
-    min-height: 44px;
-}
-
-.details-btn:hover {
-    background: #2980b9;
-}
-
-/* Telegram modal styles */
-.telegram-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
-    padding: 15px;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
-
-.telegram-link {
-    margin: 12px 0;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    word-break: break-all;
-    border: 1px solid #e9ecef;
-    font-size: 14px;
-}
-
-.telegram-link a {
-    color: #3498db;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.telegram-link a:hover {
-    text-decoration: underline;
-}
-
-.copy-btn, .close-btn {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-    font-size: 16px;
-    transition: background 0.3s ease;
-    min-height: 44px;
-    -webkit-appearance: none;
-    flex: 1;
-}
-
-.close-btn {
-    background: #e74c3c;
-}
-
-.copy-btn:hover {
-    background: #2980b9;
-}
-
-.close-btn:hover {
-    background: #c0392b;
-}
-
-/* Refresh button */
+/* Yangilash tugmasi */
 .refresh-btn {
     position: absolute;
-    top: 75px;
-    right: 15px;
-    z-index: 1000;
+    top: 65px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
     background: white;
     border: none;
-    width: 45px;
-    height: 45px;
     border-radius: 50%;
     font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    -webkit-appearance: none;
-    min-height: 44px;
-    min-width: 44px;
+    transition: transform 0.2s ease;
 }
 
-.refresh-btn:hover {
-    background: #f8f9fa;
-    transform: scale(1.1);
+.refresh-btn:active {
+    transform: scale(0.9);
 }
 
-/* Marker popup styles */
+/* Popup dizayni */
 .leaflet-popup-content {
-    min-width: 280px;
-    max-width: 320px;
-    margin: 15px;
+    min-width: 260px;
+    max-width: 300px;
+    margin: 10px;
 }
 
 .listing-popup {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
 }
 
 .listing-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
     color: #2c3e50;
-    margin-bottom: 6px;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 4px;
-    line-height: 1.2;
+    margin-bottom: 4px;
+    border-left: 4px solid #3498db;
+    padding-left: 6px;
 }
 
 .listing-price {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #27ae60;
-    margin: 8px 0;
+    margin: 6px 0;
 }
 
 .listing-info {
-    margin: 6px 0;
+    margin: 5px 0;
     color: #555;
     line-height: 1.3;
-    font-size: 13px;
 }
 
 .listing-info strong {
     color: #2c3e50;
 }
 
-/* Rasmlar galereyasi */
-.photos-gallery {
-    margin-top: 12px;
+/* Tugma (detallar ko‘rsatish) */
+.details-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 8px;
 }
 
-.photos-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #2c3e50;
-    font-size: 0.9rem;
+.details-btn:active {
+    background: #2980b9;
+}
+
+/* Telegram oynasi */
+.telegram-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    z-index: 3000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.telegram-link {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    word-break: break-all;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.telegram-link a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.copy-btn, .close-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 15px;
+    color: white;
+    width: 100%;
+    margin: 5px 0;
+}
+
+.copy-btn {
+    background: #3498db;
+}
+
+.close-btn {
+    background: #e74c3c;
+}
+
+/* Rasmlar galereyasi */
+.photos-gallery {
+    margin-top: 10px;
 }
 
 .photos-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 6px;
-    margin-bottom: 8px;
 }
 
 .photo-item {
     width: 100%;
-    height: 90px;
-    border-radius: 6px;
+    height: 110px;
+    border-radius: 8px;
     overflow: hidden;
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.photo-item:hover {
-    transform: scale(1.05);
+    background: #f1f1f1;
 }
 
 .photo-item img {
@@ -318,266 +267,60 @@ body {
     object-fit: cover;
 }
 
-.photo-placeholder {
-    color: #6c757d;
-    font-size: 0.8rem;
-    text-align: center;
-    padding: 8px;
-}
-
-/* Modal for full size image */
+/* Rasmni kattalashtirish oynasi */
 .photo-modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0,0,0,0.95);
     z-index: 2000;
     justify-content: center;
     align-items: center;
-    padding: 10px;
 }
 
 .photo-modal.active {
     display: flex;
 }
 
-.modal-content {
-    max-width: 95%;
-    max-height: 95%;
-    position: relative;
-}
-
 .modal-content img {
-    max-width: 100%;
+    max-width: 95%;
     max-height: 85vh;
     border-radius: 8px;
 }
 
 .modal-close {
     position: absolute;
-    top: -35px;
-    right: 0;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-appearance: none;
-    min-height: 44px;
-    min-width: 44px;
-}
-
-.modal-nav {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    transform: translateY(-50%);
-}
-
-.modal-nav button {
+    top: 15px;
+    right: 15px;
     background: rgba(255,255,255,0.2);
     border: none;
     color: white;
+    font-size: 22px;
+    border-radius: 50%;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-    -webkit-appearance: none;
-    min-height: 44px;
-    min-width: 44px;
 }
 
-.modal-nav button:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-/* Cluster styles */
-.marker-cluster-small {
-    background-color: rgba(181, 226, 140, 0.8);
-}
-
-.marker-cluster-small div {
-    background-color: rgba(110, 204, 57, 0.8);
-    color: white;
-}
-
-.marker-cluster-medium {
-    background-color: rgba(241, 211, 87, 0.8);
-}
-
-.marker-cluster-medium div {
-    background-color: rgba(240, 194, 12, 0.8);
-    color: white;
-}
-
-.marker-cluster-large {
-    background-color: rgba(253, 156, 115, 0.8);
-}
-
-.marker-cluster-large div {
-    background-color: rgba(241, 128, 23, 0.8);
-    color: white;
-}
-
-/* Mobile responsive improvements */
-@media (max-width: 768px) {
-    .header {
-        padding: 10px 12px;
-    }
-    
-    .header h1 {
-        font-size: 1.3rem;
-    }
-    
-    .header p {
-        font-size: 0.85rem;
-    }
-    
-    .refresh-btn {
-        top: 70px;
-        right: 12px;
-        width: 42px;
-        height: 42px;
-        font-size: 16px;
-    }
-    
-    .leaflet-popup-content {
-        min-width: 260px;
-        max-width: 300px;
-        margin: 12px;
-    }
-    
-    .photos-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .photo-item {
-        height: 100px;
-    }
-    
-    .listing-title {
-        font-size: 1rem;
-    }
-    
-    .listing-price {
-        font-size: 1.1rem;
-    }
-    
-    .listing-info {
-        font-size: 12px;
-    }
-    
-    /* Button groups for mobile */
-    .modal-content .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .copy-btn, .close-btn {
-        margin: 0;
-        width: 100%;
-    }
-}
-
-/* Very small screens */
+/* Kichik ekranlar (≤360px) */
 @media (max-width: 360px) {
     .header h1 {
         font-size: 1.2rem;
     }
-    
+
     .header p {
         font-size: 0.8rem;
     }
-    
-    .leaflet-popup-content {
-        min-width: 240px;
-        max-width: 280px;
-        margin: 10px;
-    }
-    
-    .refresh-btn {
-        top: 65px;
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        font-size: 15px;
-    }
-    
-    .photos-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .photo-item {
-        height: 85px;
-    }
-}
 
-/* Touch device improvements */
-@media (hover: none) and (pointer: coarse) {
-    .refresh-btn:hover {
-        transform: none;
-        background: white;
+    .listing-title {
+        font-size: 0.95rem;
     }
-    
-    .details-btn:hover {
-        background: #3498db;
-    }
-    
-    .photo-item:hover {
-        transform: none;
-    }
-    
-    /* Larger touch targets */
-    .leaflet-popup-close-button {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 20px !important;
-    }
-}
 
-/* Landscape orientation */
-@media (max-height: 500px) and (orientation: landscape) {
-    .header {
-        padding: 8px 12px;
-    }
-    
-    .header h1 {
-        font-size: 1.1rem;
-        margin-bottom: 2px;
-    }
-    
-    .header p {
-        font-size: 0.8rem;
-    }
-    
-    .refresh-btn {
-        top: 60px;
-        width: 38px;
-        height: 38px;
+    .details-btn, .copy-btn, .close-btn {
         font-size: 14px;
     }
-}
 
-/* Prevent zoom on input for iOS */
-@media (max-width: 768px) {
-    input, select, textarea {
-        font-size: 16px; /* Prevents zoom on focus in iOS */
+    .photo-item {
+        height: 90px;
     }
 }
