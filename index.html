@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uy Ijara Xaritasi</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏠 Uy Ijara Xaritasi</h1>
+            <p id="stats">Yuklanmoqda...</p>
+        </header>
+
+        <!-- Xarita konteyneri -->
+        <div id="map"></div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Xarita yuklanmoqda...</p>
+        </div>
+
+        <!-- Error message -->
+        <div id="error" class="error hidden">
+            <p>Xatolik yuz berdi. Qaytadan urinib ko'ring.</p>
+            <button onclick="loadListings()">Qayta yuklash</button>
+        </div>
+    </div>
+
+    <!-- Yangilash tugmasi -->
+    <button id="refreshBtn" class="refresh-btn" onclick="loadListings()">🔄</button>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Marker Cluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
