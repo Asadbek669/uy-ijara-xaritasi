@@ -20,6 +20,32 @@ body {
 }
 
 
+
+#map {
+  width: 100%;
+  height: 100vh; /* butun ekran balandligi */
+  border-radius: 0;
+  image-rendering: auto; /* piksel buzilmasin */
+}
+
+.leaflet-tile {
+  image-rendering: -webkit-optimize-contrast; /* safari va chrome uchun tiniqlik */
+  transform: scale(1);
+  backface-visibility: hidden;
+}
+
+
+.custom-marker div {
+  backdrop-filter: blur(2px); /* marker ostidagi rang tiniqroq */
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.custom-marker div:hover {
+  transform: scale(1.05);
+}
+
+
 /* === Mobilga moslashtirilgan popup galereya === */
 .photos-gallery {
     margin-top: 10px;
@@ -417,5 +443,6 @@ body {
         height: 90px;
     }
 }
+
 
 
