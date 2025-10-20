@@ -11,26 +11,31 @@ function initMap() {
     // O'zbekiston markazi
     const defaultCenter = [41.2995, 69.2401];
 
-    // Xaritani yaratish
-    // Xaritani yaratish
+    // Xaritani yaratish (retina uchun optimizatsiya)
     map = L.map('map', {
-        zoom: 13,
-        preferCanvas: true,       // GPU yordamida tezroq chizish
-        zoomSnap: 0.25,           // zoom bosqichlarini silliqlashtiradi
+        preferCanvas: true,
+        zoomSnap: 0.25,
         zoomDelta: 0.5,
-        wheelPxPerZoomLevel: 80,  // sichqoncha / touch uchun sezgirlik
+        wheelPxPerZoomLevel: 80,
         zoomControl: true,
-        attributionControl: true
+        attributionControl: true,
+        zoomAnimation: true,
+        fadeAnimation: true,
+        inertia: true,
+        inertiaDeceleration: 2500,
     }).setView(defaultCenter, 12);
     
-    // Retina (hi-res) tile layer — mobil ekranlarda tiniq ko‘rinadi
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        detectRetina: true,
-        maxZoom: 19,
-        tileSize: 512,
-        zoomOffset: -1,
+    // Retina uchun maxsimal tiniqlik
+    const retinaTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        tileSize: 512,          // 2× sifatli rasm yuklaydi
+        zoomOffset: -1,         // to‘g‘ri zoomni beradi
+        detectRetina: true,     // retina ekranlarni avtomatik aniqlaydi
+        crossOrigin: true,      // renderda tiniqlik uchun muhim
         attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    });
+    retinaTiles.addTo(map);
+
 
 
 
@@ -391,5 +396,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.debugPhotos = debugPhotos;
 
 });
+
 
 
