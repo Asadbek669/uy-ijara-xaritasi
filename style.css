@@ -253,10 +253,11 @@ body {
     gap: 6px;
 }
 
+/* Galereya rasmlarini yanada kichikroq qilish */
 .photo-item {
     width: 100%;
-    height: 110px;
-    border-radius: 8px;
+    height: 70px; /* avval 110px edi */
+    border-radius: 6px;
     overflow: hidden;
     background: #f1f1f1;
 }
@@ -266,6 +267,7 @@ body {
     height: 100%;
     object-fit: cover;
 }
+
 
 /* Rasmni kattalashtirish oynasi */
 .photo-modal {
@@ -324,3 +326,4 @@ body {
         height: 90px;
     }
 }
+
