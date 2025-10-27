@@ -4,50 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="format-detection" content="telephone=no">
+    <!-- ❌ Telefon raqamni bloklovchi meta olib tashlandi -->
+    
     <meta name="theme-color" content="#667eea">
     <title>Uy Ijara Xaritasi</title>
+
     <link rel="stylesheet" href="style.css">
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Marker Cluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 </head>
+
 <body>
     <div class="container">
-        <!-- Header -->
         <header class="header">
             <h1>🏠 Uy Ijara Xaritasi</h1>
-            <p id="stats">Yuklanmoqda bu taxminan 15 soniya vaqt oladi...</p>
+            <p id="stats">Yuklanmoqda bu taxminan 10–15 soniya vaqt oladi...</p>
         </header>
 
-        <!-- Xarita konteyneri -->
         <div id="map"></div>
 
-        <!-- Loading indicator -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p>Xarita yuklanmoqda...</p>
         </div>
 
-        <!-- Error message -->
         <div id="error" class="error hidden">
             <p>Xatolik yuz berdi. Qaytadan urinib ko'ring.</p>
             <button onclick="loadListings()">Qayta yuklash</button>
         </div>
     </div>
 
-    <!-- Yangilash tugmasi -->
     <button id="refreshBtn" class="refresh-btn" onclick="loadListings()">🔄</button>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Marker Cluster JS -->
+    <!-- Marker Cluster -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <script src="script.js"></script>
-</body>
 
+    <!-- ✅ Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Full screen holati
+
+        // ✅ Dark mode
+        const isDark = tg.colorScheme === "dark";
+        if (isDark) {
+            document.body.classList.add("telegram-dark");
+        }
+
+        // ✅ Foydalanuvchi ID Telegramdan
+        const initData = tg.initDataUnsafe;
+        const userId = initData?.user?.id;
+
+        if (userId) {
+            console.log("Telegram User ID:", userId);
+            localStorage.setItem("tg_user_id", userId);
+        } else {
+            console.warn("❗Telegram foydalanuvchi aniqlanmadi!");
+        }
+    </script>
+
+    <!-- Sizning asosiy xarita logikangiz -->
+    <script src="script.js"></script>
+
+</body>
 </html>
+
 
 
