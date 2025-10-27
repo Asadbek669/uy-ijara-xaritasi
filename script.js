@@ -1,5 +1,5 @@
 // API base URL
-const API_BASE = 'https://uy-ijara-ap.onrender.com/api';
+const API_BASE = 'https://backend-api-rtej.onrender.com/api';
 // URL orqali user_id kelsa – localStorage ga saqlaymiz
 const urlParams = new URLSearchParams(window.location.search);
 const tgUserId = urlParams.get("user_id");
@@ -454,3 +454,4 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
