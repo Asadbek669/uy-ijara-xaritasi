@@ -199,6 +199,10 @@ function createMarker(listing) {
     return marker;
 }
 
+function callNumber(phone) {
+    window.location.href = `tel:${phone}`;
+}
+
 // Popup content yaratish
 // Popup content yaratish
 function createPopupContent(listing) {
@@ -244,8 +248,8 @@ function createPopupContent(listing) {
 
             ${photosHTML}
 
-            <div class="listing-actions">
-                <a href="${phoneCallLink}" class="call-btn">📞 Qo‘ng‘iroq qilish</a>
+            <button class="call-btn" onclick="callNumber('${phoneDisplay}')">📞 Qo‘ng‘iroq qilish</button>
+
 			<button class="telegram-btn" onclick="saveListing(${id})">
 				💾 E’lonni saqlash
 			</button>
@@ -454,4 +458,5 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
