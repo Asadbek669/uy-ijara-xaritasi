@@ -213,7 +213,6 @@ function callNumber(phone) {
 
 
 // Popup content yaratish
-// Popup content yaratish
 function createPopupContent(listing) {
     const {
         id, title, price, description, photos,
@@ -221,10 +220,10 @@ function createPopupContent(listing) {
     } = listing;
 
     const phoneDisplay = phone ? `+998${phone.replace(/^(\+?998)?/, '')}` : "No'malum";
-    const phoneCallLink = phone ? `tel:${phoneDisplay}` : "#";
-		
+    const callButton = phone
+        ? `<a href="tel:${phoneDisplay}" target="_blank" class="call-btn">📞 Qo‘ng‘iroq qilish</a>`
+        : '';
 
-    // ✅ 3 qator tavsif + Batafsil
     const shortDesc = escapeHtml(description || "Tavsif mavjud emas");
     const descHTML = `
         <div class="listing-description" id="desc-${id}">
@@ -252,18 +251,14 @@ function createPopupContent(listing) {
         <div class="listing-popup">
             <div class="listing-title">${escapeHtml(title)}</div>
             <div class="listing-price">${formatPrice(price)} so'm/oy</div>
-
             ${descHTML}
-
             ${photosHTML}
 
-            <button class="call-btn" onclick="callNumber('${phoneDisplay}')">📞 Qo‘ng‘iroq qilish</button>
+            ${callButton}
 
-			<button class="telegram-btn" onclick="saveListing(${id})">
-				💾 E’lonni saqlash
-			</button>
-
-            </div>
+            <button class="telegram-btn" onclick="saveListing(${id})">
+                💾 E’lonni saqlash
+            </button>
         </div>
     `;
 }
@@ -453,6 +448,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
