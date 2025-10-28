@@ -511,20 +511,24 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
+
 .call-btn {
   display: inline-block;
-  background: #0088cc;
+  background: #28a745; /* 💚 Yashil rang */
   color: white;
   font-weight: 600;
   text-decoration: none;
   padding: 10px 18px;
   border-radius: 12px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-  transition: 0.2s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
   text-align: center;
 }
+
 .call-btn:hover {
-  background: #0077b6;
+  background: #218838; /* To‘qroq yashil (hover paytida) */
   transform: scale(1.03);
 }
+
 
