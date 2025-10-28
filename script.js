@@ -200,8 +200,17 @@ function createMarker(listing) {
 }
 
 function callNumber(phone) {
-    window.location.href = `tel:${phone}`;
+    const tg = window.Telegram?.WebApp;
+
+    if (tg && typeof tg.openLink === "function") {
+        // ✅ Telegram WebApp ichida ishlaydi
+        tg.openLink(`tel:${phone}`);
+    } else {
+        // 🌐 Oddiy brauzerda ishlaydi
+        window.location.href = `tel:${phone}`;
+    }
 }
+
 
 // Popup content yaratish
 // Popup content yaratish
@@ -357,21 +366,7 @@ function showTelegramLink(listingId) {
     document.head.appendChild(style);
 }
 
-// Linkni nusxalash
-function copyTelegramLink(url) {
-    navigator.clipboard.writeText(url).then(() => {
-        alert('Link nusxalandi! Endi Telegram\'da ochishingiz mumkin.');
-    }).catch(() => {
-        // Fallback
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('Link nusxalandi!');
-    });
-}
+
 
 // Modalni yopish
 function closeModal() {
@@ -458,5 +453,6 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
