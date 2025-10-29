@@ -1,4 +1,4 @@
-/* 🌌 Tezkor Uy Ijara — Blue Neon Glass dizayn (mobilga mos) */
+/* Mobil versiya uchun asosiy dizayn (≤768px) */
 * {
     margin: 0;
     padding: 0;
@@ -7,8 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0b1220 0%, #0d1b3a 100%);
-    color: #e0eaff;
+    background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
     min-height: 100vh;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
@@ -20,77 +19,43 @@ body {
     height: 100vh;
 }
 
-/* === Xarita === */
+/* === Xarita tiniqlashtirish (mobil uchun) === */
 #map {
   width: 100%;
   height: 100vh;
-  background: #0d1b3a;
+  border-radius: 0;
+  background: #e8f5e9;
   touch-action: pan-x pan-y;
-  -webkit-transform: translateZ(0);
+  -webkit-transform: translateZ(0); /* GPU tezlashtirish */
+  image-rendering: auto;
 }
 
-/* === Marker dizayni (neon ko‘k effekt bilan) === */
+.leaflet-tile {
+  image-rendering: -webkit-optimize-contrast !important;
+  -ms-interpolation-mode: nearest-neighbor;
+  transform: scale(1);
+  backface-visibility: hidden;
+}
+
+.leaflet-pane {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 .custom-marker div {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: #fff;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-weight: 600;
-  font-size: 13px;
-  border: 2px solid rgba(255,255,255,0.15);
-  box-shadow: 0 0 10px rgba(30,144,255,0.6);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #3a7d44 !important;
+  backdrop-filter: blur(2px);
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
 }
 
 .custom-marker div:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(96,165,250,0.9);
 }
 
-/* === Popup === */
-.leaflet-popup-content-wrapper {
-  background: rgba(13, 27, 58, 0.9);
-  border: 1px solid rgba(96,165,250,0.4);
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 25px rgba(30,144,255,0.2);
-  color: #e2e8f0;
-}
-
-.leaflet-popup-tip {
-  background: rgba(13,27,58,0.9);
-}
-
-/* === Popup kontent === */
-.listing-popup {
-    max-width: 320px;
-    font-size: 14px;
-    color: #e2e8f0;
-}
-
-.listing-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #60a5fa;
-    margin-bottom: 4px;
-    border-left: 4px solid #1e90ff;
-    padding-left: 6px;
-}
-
-.listing-price {
-    color: #1e90ff;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-.listing-info {
-    margin: 4px 0;
-    color: #cbd5e1;
-}
-
-/* === Rasmlar galereyasi === */
+/* === Mobilga moslashtirilgan popup galereya === */
 .photos-gallery {
-    margin-top: 8px;
+    margin-top: 10px;
     position: relative;
 }
 
@@ -98,6 +63,7 @@ body {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 5px;
     border-radius: 10px;
 }
@@ -108,104 +74,104 @@ body {
     object-fit: cover;
     border-radius: 10px;
     scroll-snap-align: center;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease-in-out;
 }
 
-.photos-slider img:hover {
-    transform: scale(1.03);
+.photos-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.photos-slider img:active {
+    transform: scale(0.98);
 }
 
 .photo-count {
     position: absolute;
     bottom: 8px;
     right: 10px;
-    background: rgba(11,18,32,0.8);
-    color: #60a5fa;
+    background: rgba(44, 85, 48, 0.8);
+    color: white;
     font-size: 12px;
     padding: 3px 6px;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
-/* === Tugmalar === */
-.details-btn,
-.call-btn,
-.telegram-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
+.photo-placeholder {
+    background: #ecf0f1;
+    color: #555;
     text-align: center;
-    font-weight: 600;
+    padding: 30px 0;
+    border-radius: 10px;
     font-size: 14px;
-    color: #fff;
+}
+
+.listing-popup {
+    max-width: 320px;
+    font-size: 14px;
+}
+
+.listing-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.listing-price {
+    color: #2c5530;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.details-btn {
+    width: 100%;
+    background: #4a7c59;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    margin-top: 8px;
-    text-decoration: none;
+    font-size: 14px;
 }
 
-/* Ko‘k tugmalar */
-.details-btn,
-.telegram-btn {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    box-shadow: 0 0 12px rgba(30,144,255,0.4);
+.details-btn:hover {
+    background: #3a6a48;
 }
 
-.details-btn:hover,
-.telegram-btn:hover {
-    background: linear-gradient(135deg, #60a5fa, #2563eb);
-    box-shadow: 0 0 18px rgba(30,144,255,0.7);
+/* Sarlavha (Header) */
+.header {
+    text-align: center;
+    padding: 10px 12px;
+    color: white;
+    background: rgba(44, 85, 48, 0.9);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Yashil qo‘ng‘iroq tugmasi */
-.call-btn {
-    background: linear-gradient(135deg, #16a34a, #15803d);
-    box-shadow: 0 0 10px rgba(22,163,74,0.5);
+.header h1 {
+    font-size: 1.3rem;
+    margin-bottom: 3px;
 }
 
-.call-btn:hover {
-    background: linear-gradient(135deg, #22c55e, #15803d);
-    box-shadow: 0 0 15px rgba(22,163,74,0.8);
+.header p {
+    font-size: 0.85rem;
+    opacity: 0.9;
 }
 
-/* === Refresh tugmasi === */
-.refresh-btn {
-    position: absolute;
-    top: 65px;
-    right: 12px;
-    width: 44px;
-    height: 44px;
-    background: rgba(30,144,255,0.2);
-    border: 1px solid rgba(96,165,250,0.4);
-    border-radius: 50%;
-    color: #60a5fa;
-    font-size: 18px;
-    box-shadow: 0 0 15px rgba(30,144,255,0.3);
-    z-index: 1000;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.refresh-btn:hover {
-    background: rgba(30,144,255,0.3);
-    transform: scale(1.05);
-}
-
-/* === Yuklanish === */
+/* Yuklanish animatsiyasi */
 .loading {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #60a5fa;
+    color: white;
     z-index: 1000;
 }
 
 .spinner {
-    border: 3px solid rgba(96,165,250,0.2);
-    border-top: 3px solid #1e90ff;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -218,62 +184,126 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* === Header === */
-.header {
-    text-align: center;
-    padding: 10px 12px;
-    color: #60a5fa;
-    background: rgba(13,27,58,0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(96,165,250,0.3);
-    box-shadow: 0 3px 12px rgba(30,144,255,0.2);
-}
-
-.header h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.header p {
-    font-size: 0.85rem;
-    color: #93c5fd;
-}
-
-/* === Xatolik oynasi === */
+/* Xatolik oynasi */
 .error {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(13,27,58,0.9);
-    color: #fca5a5;
+    background: white;
+    color: #2c5530;
     padding: 18px;
     border-radius: 10px;
     width: 85%;
     max-width: 300px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     text-align: center;
-    box-shadow: 0 0 20px rgba(239,68,68,0.4);
-    border: 1px solid rgba(239,68,68,0.3);
-    z-index: 2000;
+    z-index: 1000;
 }
 
 .error button {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: #4a7c59;
     color: white;
     border: none;
-    padding: 10px 14px;
+    padding: 12px 18px;
     border-radius: 6px;
     width: 100%;
     margin-top: 10px;
-    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
 }
 
-/* === Telegram modal oynasi === */
+.error button:hover {
+    background: #3a6a48;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Yangilash tugmasi */
+.refresh-btn {
+    position: absolute;
+    top: 65px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    background: #4a7c59;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    color: white;
+}
+
+.refresh-btn:active {
+    transform: scale(0.9);
+}
+
+/* Popup dizayni */
+.leaflet-popup-content {
+    min-width: 260px;
+    max-width: 300px;
+    margin: 10px;
+}
+
+.listing-popup {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+}
+
+.listing-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2c5530;
+    margin-bottom: 4px;
+    border-left: 4px solid #4a7c59;
+    padding-left: 6px;
+}
+
+.listing-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #2c5530;
+    margin: 6px 0;
+}
+
+.listing-info {
+    margin: 5px 0;
+    color: #555;
+    line-height: 1.3;
+}
+
+.listing-info strong {
+    color: #2c5530;
+}
+
+.details-btn {
+    background: #4a7c59;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.details-btn:active {
+    background: #3a6a48;
+}
+
+/* Telegram oynasi */
 .telegram-modal {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -282,13 +312,27 @@ body {
 }
 
 .modal-content {
-    background: rgba(13,27,58,0.9);
-    color: #e0eaff;
-    border: 1px solid rgba(96,165,250,0.4);
-    border-radius: 12px;
+    background: white;
+    border-radius: 10px;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 0 25px rgba(30,144,255,0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+.telegram-link {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    word-break: break-all;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.telegram-link a {
+    color: #4a7c59;
+    text-decoration: none;
 }
 
 .copy-btn, .close-btn {
@@ -298,21 +342,194 @@ body {
     font-size: 15px;
     color: white;
     width: 100%;
-    margin-top: 8px;
-    cursor: pointer;
+    margin: 5px 0;
 }
 
 .copy-btn {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: #4a7c59;
 }
 
 .close-btn {
-    background: linear-gradient(135deg, #e11d48, #b91c1c);
+    background: #8b4513;
 }
 
-/* === Responsive === */
-@media (max-width: 400px) {
-    .listing-title { font-size: 15px; }
-    .photos-slider img { height: 160px; }
-    .header h1 { font-size: 1.2rem; }
+.copy-btn:hover {
+    background: #3a6a48;
+}
+
+.close-btn:hover {
+    background: #734c2c;
+}
+
+.photos-gallery {
+    margin-top: 10px;
+}
+
+.photos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+}
+
+.photo-item {
+    width: 100%;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-modal.active {
+    display: flex;
+}
+
+.modal-content img {
+    max-width: 95%;
+    max-height: 85vh;
+    border-radius: 8px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(44, 85, 48, 0.8);
+    border: none;
+    color: white;
+    font-size: 22px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+@media (max-width: 360px) {
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .header p {
+        font-size: 0.8rem;
+    }
+
+    .listing-title {
+        font-size: 0.95rem;
+    }
+
+    .details-btn, .copy-btn, .close-btn {
+        font-size: 14px;
+    }
+
+    .photo-item {
+        height: 90px;
+    }
+}
+
+.call-btn, .telegram-btn {
+    display: block;
+    width: 100%;
+    background: #4a7c59;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.call-btn,
+.telegram-btn {
+    color: #fff !important;
+}
+
+.call-btn:hover,
+.telegram-btn:hover {
+    color: #fff !important;
+}
+
+.call-btn:visited,
+.telegram-btn:visited {
+    color: #fff !important;
+}
+
+.telegram-btn {
+    background: #3a7d44;
+}
+
+.call-btn:active,
+.telegram-btn:active {
+    opacity: 0.8;
+}
+
+.listing-description {
+    max-height: 3.9em;
+    overflow: hidden;
+    position: relative;
+    line-height: 1.3em;
+}
+
+.listing-description.expanded {
+    max-height: none;
+}
+
+.read-more-btn {
+    color: #4a7c59;
+    font-size: 13px;
+    margin-top: 6px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.call-btn {
+  display: inline-block;
+  background: #4a7c59;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.call-btn:hover {
+  background: #3a6a48;
+  transform: scale(1.03);
+}
+
+/* Telegram dark mode */
+body.telegram-dark {
+    background: linear-gradient(135deg, #1a331d 0%, #2d4a33 100%);
+}
+
+body.telegram-dark .header {
+    background: rgba(26, 51, 29, 0.9);
+}
+
+body.telegram-dark #map {
+    background: #1e1e1e;
+}
+
+body.telegram-dark .custom-marker div {
+    background: #2d4a33 !important;
 }
