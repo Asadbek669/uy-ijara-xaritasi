@@ -250,7 +250,9 @@ function createPopupContent(listing) {
     return `
         <div class="listing-popup">
             <div class="listing-title">${escapeHtml(title)}</div>
-            <div class="listing-price">${formatPrice(price)} so'm/oy</div>
+            <div class="listing-price">
+				${formatPrice(price)} ${listing.currency || "so'm"} / oy
+			</div>
             ${descHTML}
             ${photosHTML}
 
@@ -448,6 +450,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
