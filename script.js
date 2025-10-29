@@ -176,7 +176,8 @@ function createMarker(listing) {
                 box-shadow: 0 2px 10px rgba(0,0,0,0.3);
                 white-space: nowrap;
             ">
-                💰 ${formatPrice(price)}
+                ${formatPrice(price)} ${listing.currency || "so'm"}
+
             </div>
         `,
         className: 'custom-marker',
@@ -450,6 +451,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
