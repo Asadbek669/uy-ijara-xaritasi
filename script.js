@@ -66,7 +66,7 @@ function initMap() {
         // 🔵 Ko‘k marker icon (klassik marker rasmi)
         const userIcon = L.icon({
             iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", // ko‘k marker rasmi
-            iconSize: [38, 38],
+            iconSize: [25, 41],  
             iconAnchor: [19, 38],
             popupAnchor: [0, -35]
         });
@@ -487,6 +487,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
