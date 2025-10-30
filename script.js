@@ -269,15 +269,17 @@ function createPopupContent(listing) {
     let photosHTML = '';
     if (photos && photos.length > 0) {
         photosHTML = `
-            <div class="photos-gallery">
-                <div class="photos-slider">
-                    ${photos.map(photo => `
-                        <img src="${getPhotoUrl(photo)}" loading="lazy"
-                        onerror="this.src='https://via.placeholder.com/300x200?text=Rasm+Yuklanmadi'">
-                    `).join('')}
-                </div>
-                <div class="photo-count">${photos.length} ta rasm</div>
-            </div>
+			<div class="photos-gallery">
+			  <div class="photos-slider" data-total="${photos.length}">
+			    ${photos.map((photo, i) => `
+			      <img src="${getPhotoUrl(photo)}" data-index="${i}" loading="lazy"
+			      onerror="this.src='https://via.placeholder.com/300x200?text=Rasm+Yuklanmadi'">
+			    `).join('')}
+			  </div>
+			  <div class="dots-container">
+			    ${photos.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
+			  </div>
+			</div>
         `;
     }
 
@@ -466,12 +468,7 @@ function debugPhotos() {
         });
 }
 
-// Sahifa yuklanganda
-document.addEventListener('DOMContentLoaded', function() {
-    initMap();
-    window.debugPhotos = debugPhotos;
 
-});
 
 
 
@@ -488,51 +485,68 @@ function toggleDescription(id) {
     }
 }
 
-// ✅ Faqat bitta rasm o‘tishini ta’minlash
+// === 📸 Faqat bitta rasm o'tishi va nuqtali indikator ===
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".photos-slider").forEach(slider => {
+    const dots = slider.parentElement.querySelectorAll(".dot");
+    const slideWidth = slider.clientWidth;
+
+    let startX = 0;
+    let scrollStart = 0;
+    let isDragging = false;
+
+    // 👉 Touch start
+    slider.addEventListener("touchstart", e => {
+      isDragging = true;
+      startX = e.touches[0].pageX;
+      scrollStart = slider.scrollLeft;
+    });
+
+    // 👉 Touch move
+    slider.addEventListener("touchmove", e => {
+      if (!isDragging) return;
+      const moveX = e.touches[0].pageX - startX;
+      slider.scrollLeft = scrollStart - moveX;
+    });
+
+    // 👉 Touch end
+    slider.addEventListener("touchend", () => {
+      isDragging = false;
+      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
+      slider.scrollTo({ left: nearest, behavior: "smooth" });
+
+      // 🔘 nuqtalarni yangilash
+      const index = Math.round(nearest / slideWidth);
+      dots.forEach((d, i) => d.classList.toggle("active", i === index));
+    });
+
+    // 💻 Mouse (kompyuter) uchun
     let isDown = false;
-    let startX;
-    let scrollLeft;
+    let start = 0;
+    let scrollLeft = 0;
 
     slider.addEventListener("mousedown", e => {
       isDown = true;
-      slider.classList.add("active");
-      startX = e.pageX - slider.offsetLeft;
+      start = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
     });
 
-    slider.addEventListener("mouseleave", () => {
-      isDown = false;
-      slider.classList.remove("active");
-    });
-
+    slider.addEventListener("mouseleave", () => isDown = false);
     slider.addEventListener("mouseup", () => {
+      if (!isDown) return;
       isDown = false;
-      slider.classList.remove("active");
-
-      // 📸 Yaqin eng yaqin rasmga “snap” qilish
-      const slideWidth = slider.clientWidth;
       const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
       slider.scrollTo({ left: nearest, behavior: "smooth" });
+      const index = Math.round(nearest / slideWidth);
+      dots.forEach((d, i) => d.classList.toggle("active", i === index));
     });
 
     slider.addEventListener("mousemove", e => {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.3; // ✏️ tezlikni kamaytirish uchun 1.3 → 0.8 qilishingiz mumkin
+      const walk = (x - start);
       slider.scrollLeft = scrollLeft - walk;
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
