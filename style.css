@@ -64,12 +64,13 @@ body {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
     -webkit-overflow-scrolling: touch;
     gap: 5px;
     border-radius: 10px;
-    scroll-behavior: smooth;          /* ✅ silliq harakat */
-    overscroll-behavior-x: contain;   /* ✅ haddan tashqari o‘tishni oldini oladi */
-    touch-action: pan-y;              /* ✅ faqat vertikal scroll (surish)ga ruxsat, gorizontalda sekinlashtiradi */
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x; /* ✅ gorizontal surish yoqilgan */
 }
 
 
@@ -657,4 +658,5 @@ body.telegram-dark .custom-marker div {
     line-height: 1.4;
     border-left: 3px solid #6a11cb;
 }
+
 
