@@ -145,13 +145,14 @@ body {
 
 /* Sarlavha (Header) */
 .header {
-    text-align: center;
-    padding: 10px 12px;
+    text-align: center; /* ✅ markazdan olib tashlaymiz */
+    padding: 5px 8px; /* ✅ hoshiyani kichraytirdik */
     color: white;
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #6a11cb 100%);
     backdrop-filter: blur(8px);
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+
 
 .header h1 {
     font-size: 1.3rem;
@@ -554,21 +555,24 @@ body.telegram-dark .custom-marker div {
     background: linear-gradient(135deg, #1a2d5c 0%, #4a0d8c 100%) !important;
 }
 .header h1 {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    justify-content: center; /* Matn markazda qoladi */
     font-size: 1.4rem;
     color: #fff;
     font-weight: bold;
 }
 
 .logo {
-    width: 40px;
-    height: 40px;
+    position: absolute;
+    left: 10px; /* Logo chap tomonda */
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
     object-fit: contain;
 }
+
 
 .title-text {
   font-family: 'Fredoka One', sans-serif;
