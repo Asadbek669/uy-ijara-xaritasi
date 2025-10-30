@@ -65,7 +65,7 @@ function initMap() {
     if (!isNaN(lat) && !isNaN(lon)) {
         // 🔵 Ko‘k marker icon (klassik marker rasmi)
         const userIcon = L.icon({
-            iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png", // ko‘k marker rasmi
+            iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", // ko‘k marker rasmi
             iconSize: [38, 38],
             iconAnchor: [19, 38],
             popupAnchor: [0, -35]
@@ -75,7 +75,7 @@ function initMap() {
         const userMarker = L.marker([lat, lon], { icon: userIcon }).addTo(map);
 
         // Popup bog‘lash
-        userMarker.bindPopup("<b>Siz turgan joylashuv</b>").openPopup();
+        userMarker.bindPopup(`<div style="text-align:center;"><b>Siz turgan joylashuv</b></div>`);
 
         // Xarita markazini foydalanuvchiga o‘tkazish
         map.setView([lat, lon], 14);
@@ -474,6 +474,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
