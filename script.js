@@ -240,7 +240,8 @@ function callNumber(phone) {
 function createPopupContent(listing) {
     const {
         id, title, price, description, photos,
-        owner_name, phone, distance_km
+        owner_name, phone, distance_km,
+        total_floors, floor_number
     } = listing;
 
     const phoneDisplay = phone ? `+998${phone.replace(/^(\+?998)?/, '')}` : "No'malum";
@@ -254,6 +255,15 @@ function createPopupContent(listing) {
             ${shortDesc}
         </div>
         <span class="read-more-btn" onclick="toggleDescription(${id})">Batafsil…</span>
+    `;
+
+    // 🏙 Qo‘shimcha ma’lumotlar (pastda chiqadi)
+    const extraInfo = `
+        <div class="listing-extra">
+            🏢 <b>Qavat:</b> ${floor_number || '-'} / ${total_floors || '-'}<br>
+            ${distance_km ? `📍 <b>Masofa:</b> ${distance_km} km uzoqlikda<br>` : ''}
+            🆔 <b>E’lon ID:</b> ${id}
+        </div>
     `;
 
     let photosHTML = '';
@@ -277,7 +287,9 @@ function createPopupContent(listing) {
             <div class="listing-price">
 				${formatPrice(price)} ${listing.currency || "so'm"} / oy
 			</div>
+
             ${descHTML}
+            ${extraInfo} <!-- ✅ qo‘shimcha ma’lumotlar shu yerda -->
             ${photosHTML}
 
             ${callButton}
@@ -288,6 +300,7 @@ function createPopupContent(listing) {
         </div>
     `;
 }
+
 
 
 // Batafsil ma'lumot ko'rsatish
@@ -474,6 +487,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
