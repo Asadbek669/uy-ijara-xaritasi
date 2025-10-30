@@ -662,4 +662,26 @@ body.telegram-dark .custom-marker div {
 
 
 
+/* --- 📍 Slayd indikator nuqtalari (•••) --- */
+.dots-container {
+  text-align: center;
+  margin-top: 6px;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 3px;
+  background-color: #c5c5c5;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.dot.active {
+  background-color: #2a5298;
+  width: 10px;
+  height: 10px;
+}
+
 
