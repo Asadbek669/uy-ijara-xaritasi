@@ -67,7 +67,11 @@ body {
     -webkit-overflow-scrolling: touch;
     gap: 5px;
     border-radius: 10px;
+    scroll-behavior: smooth;          /* ✅ silliq harakat */
+    overscroll-behavior-x: contain;   /* ✅ haddan tashqari o‘tishni oldini oladi */
+    touch-action: pan-y;              /* ✅ faqat vertikal scroll (surish)ga ruxsat, gorizontalda sekinlashtiradi */
 }
+
 
 .photos-slider img {
     flex: 0 0 100%;
@@ -75,8 +79,16 @@ body {
     object-fit: cover;
     border-radius: 10px;
     scroll-snap-align: center;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.25s ease;
     border: 2px solid #2a5298;
+    user-select: none;              /* ✅ foydalanuvchi tanlab ololmaydi */
+    pointer-events: auto;           /* ✅ rasm ustida to‘g‘ri javob beradi */
+    touch-action: pan-y;            /* ✅ mobil sezgirlikni yumshatadi */
+}
+
+.photos-slider {
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always; /* ✅ har doim bitta rasmda to‘xtaydi */
 }
 
 .photos-slider::-webkit-scrollbar {
@@ -633,3 +645,16 @@ body.telegram-dark .custom-marker div {
 .refresh-btn:active .refresh-icon {
     transform: rotate(360deg); /* bosilganda aylanish animatsiyasi */
 }
+
+
+.listing-extra {
+    margin-top: 8px;
+    padding: 8px;
+    background: linear-gradient(135deg, #f3f5ff 0%, #e8eafc 100%);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e3c72;
+    line-height: 1.4;
+    border-left: 3px solid #6a11cb;
+}
+
