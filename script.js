@@ -488,6 +488,45 @@ function toggleDescription(id) {
     }
 }
 
+// ✅ Faqat bitta rasm o‘tishini ta’minlash
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".photos-slider").forEach(slider => {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener("mousedown", e => {
+      isDown = true;
+      slider.classList.add("active");
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener("mouseleave", () => {
+      isDown = false;
+      slider.classList.remove("active");
+    });
+
+    slider.addEventListener("mouseup", () => {
+      isDown = false;
+      slider.classList.remove("active");
+
+      // 📸 Yaqin eng yaqin rasmga “snap” qilish
+      const slideWidth = slider.clientWidth;
+      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
+      slider.scrollTo({ left: nearest, behavior: "smooth" });
+    });
+
+    slider.addEventListener("mousemove", e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1.3; // ✏️ tezlikni kamaytirish uchun 1.3 → 0.8 qilishingiz mumkin
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  });
+});
+
 
 
 
