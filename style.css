@@ -55,6 +55,7 @@ body {
 }
 
 /* === Mobilga moslashtirilgan popup galereya === */
+/* --- 📸 Suratlar slayderi --- */
 .photos-gallery {
     width: 100%;
     overflow: hidden;
@@ -62,43 +63,42 @@ body {
     position: relative;
 }
 
+/* 🔹 Slayder konteyner */
 .photos-slider {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-snap-stop: always;
+    scroll-snap-stop: always;           /* Har bir rasmda to‘xtaydi */
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-    gap: 5px;
+    gap: 0;
     overscroll-behavior-x: contain;
-    touch-action: pan-x; /* ✅ Gorizontal surish yoqilgan */
-    scrollbar-width: none; /* Firefox uchun */
-}
-
-
-.photos-slider img {
-    flex: 0 0 100%;              /* ✅ Har bir rasm 100% kenglikda chiqadi */
-    height: 200px;               /* Rasmlarning balandligi */
-    object-fit: cover;           /* Tabiiy ko‘rinish */
-    border-radius: 10px;
-    scroll-snap-align: center;   /* Scroll to‘g‘ri joyda to‘xtaydi */
-    user-select: none;
-    pointer-events: none;        /* Suratni tortishda selekt qilinmaydi */
-}
-
-.photos-slider {
-    scroll-snap-type: x mandatory;
-    scroll-snap-stop: always; /* ✅ har doim bitta rasmda to‘xtaydi */
+    touch-action: pan-x;                /* Faqat yon tomonga scroll */
+    scrollbar-width: none;              /* Firefox uchun */
 }
 
 .photos-slider::-webkit-scrollbar {
-    display: none;
+    display: none;                      /* Chrome, Safari uchun */
+}
+
+/* 🔹 Rasmlar */
+.photos-slider img {
+    flex: 0 0 100%;                     /* Har bir rasm to‘liq eni egallaydi */
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    scroll-snap-align: center;          /* Markazda to‘xtaydi */
+    user-select: none;
+    pointer-events: none;               /* Tortishda tanlanmaydi */
+    border-radius: 10px;
+    transition: transform 0.25s ease;   /* Yumshoq animatsiya */
 }
 
 .photos-slider img:active {
-    transform: scale(0.98);
+    transform: scale(0.98);             /* Bosilganda biroz kichrayadi */
 }
 
+/* 🔹 Suratlar soni ko‘rsatkich */
 .photo-count {
     position: absolute;
     bottom: 8px;
@@ -110,6 +110,7 @@ body {
     border-radius: 10px;
 }
 
+/* 🔹 Agar rasm yo‘q bo‘lsa – placeholder */
 .photo-placeholder {
     background: linear-gradient(135deg, #e6f0ff 0%, #f0e6ff 100%);
     color: #2a5298;
@@ -119,6 +120,7 @@ body {
     font-size: 14px;
     border: 1px dashed #2a5298;
 }
+
 
 .listing-popup {
     max-width: 320px;
@@ -657,6 +659,7 @@ body.telegram-dark .custom-marker div {
     line-height: 1.4;
     border-left: 3px solid #6a11cb;
 }
+
 
 
 
