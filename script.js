@@ -236,32 +236,84 @@ function createPopupContent(listing) {
 }
 
 // 📸 Slider va dot indikatorni initsializatsiya
+// 📸 Slider va dot indikatorni initsializatsiya
 function initPhotoSliders() {
-  document.querySelectorAll(".photos-slider").forEach(slider => {
-    const dots = slider.parentElement.querySelectorAll(".dot");
+  document.querySelectorAll(".photos-gallery").forEach(gallery => {
+    const slider = gallery.querySelector(".photos-slider");
+    const dots = gallery.querySelectorAll(".dot");
+    
+    if (!slider || dots.length === 0) return;
+
     const slideWidth = slider.clientWidth;
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
 
-    let startX = 0, scrollStart = 0, isDragging = false;
+    // 🔹 Sliderni boshidan markazlashtirish
+    slider.scrollLeft = 0;
 
-    slider.addEventListener("touchstart", e => {
-      isDragging = true;
-      startX = e.touches[0].pageX;
-      scrollStart = slider.scrollLeft;
+    // 🔹 Har bir rasmga bosilganda faqat scroll qilish (o'tkazish) uchun
+    slider.querySelectorAll('img').forEach(img => {
+      img.style.pointerEvents = 'none'; // Rasmni tanlashni oldini olish
     });
 
-    slider.addEventListener("touchmove", e => {
+    // 🔹 Touch hodislari
+    slider.addEventListener("touchstart", (e) => {
+      isDragging = true;
+      startX = e.touches[0].pageX;
+      scrollLeft = slider.scrollLeft;
+      slider.style.scrollBehavior = 'auto'; // Animatsiyani o'chirish
+    });
+
+    slider.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
-      const moveX = e.touches[0].pageX - startX;
-      slider.scrollLeft = scrollStart - moveX;
+      e.preventDefault();
+      
+      const x = e.touches[0].pageX;
+      const walk = (x - startX) * 1.5; // Sezgirlikni kamaytiramiz
+      slider.scrollLeft = scrollLeft - walk;
+      
+      updateDots(slider, dots, slideWidth);
     });
 
     slider.addEventListener("touchend", () => {
       isDragging = false;
-      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
-      slider.scrollTo({ left: nearest, behavior: "smooth" });
-      const index = Math.round(nearest / slideWidth);
-      dots.forEach((d, i) => d.classList.toggle("active", i === index));
+      slider.style.scrollBehavior = 'smooth';
+      
+      // 🔹 Eng yaqin slaydga o'tish
+      const scrollPos = slider.scrollLeft;
+      const activeIndex = Math.round(scrollPos / slideWidth);
+      const targetScroll = activeIndex * slideWidth;
+      
+      slider.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+      
+      setActiveDot(dots, activeIndex);
     });
+
+    // 🔹 Scroll tugaganda dot yangilash
+    slider.addEventListener("scroll", () => {
+      updateDots(slider, dots, slideWidth);
+    });
+
+    // 🔹 Boshlang'ich holat
+    setActiveDot(dots, 0);
+  });
+}
+
+// 🔹 Dotlarni yangilash
+function updateDots(slider, dots, slideWidth) {
+  const scrollPos = slider.scrollLeft;
+  const activeIndex = Math.round(scrollPos / slideWidth);
+  setActiveDot(dots, activeIndex);
+}
+
+// 🔹 Faqat bitta dotni active qilish
+function setActiveDot(dots, activeIndex) {
+  dots.forEach((dot, index) => {
+    dot.classList.toggle("active", index === activeIndex);
   });
 }
 
@@ -270,7 +322,7 @@ function toggleDescription(id) {
     const desc = document.getElementById(`desc-${id}`);
     const btn = event.target;
     if (desc.classList.contains("expanded")) {
-        desc.classList.remove("expanded");
+       desc.classList.remove("expanded");
         btn.textContent = "Batafsil…";
     } else {
         desc.classList.add("expanded");
@@ -303,3 +355,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("🌍 DOM yuklandi — xarita ishga tushmoqda...");
     initMap();
 });
+
