@@ -1,0 +1,631 @@
+/* Mobil versiya uchun asosiy dizayn (≤768px) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #6a11cb 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* === Xarita tiniqlashtirish (mobil uchun) === */
+#map {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  background: linear-gradient(135deg, #e6f0ff 0%, #f0e6ff 100%);
+  touch-action: pan-x pan-y;
+  -webkit-transform: translateZ(0);
+  image-rendering: auto;
+}
+
+.leaflet-tile {
+  image-rendering: -webkit-optimize-contrast !important;
+  -ms-interpolation-mode: nearest-neighbor;
+  transform: scale(1);
+  backface-visibility: hidden;
+}
+
+.leaflet-pane {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.custom-marker div {
+  background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%) !important;
+  backdrop-filter: blur(2px);
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+  border: 2px solid white;
+}
+
+.custom-marker div:hover {
+  transform: scale(1.05);
+}
+
+/* === Mobilga moslashtirilgan popup galereya === */
+.photos-gallery {
+    margin-top: 10px;
+    position: relative;
+}
+
+.photos-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 5px;
+    border-radius: 10px;
+}
+
+.photos-slider img {
+    flex: 0 0 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    scroll-snap-align: center;
+    transition: transform 0.2s ease-in-out;
+    border: 2px solid #2a5298;
+}
+
+.photos-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.photos-slider img:active {
+    transform: scale(0.98);
+}
+
+.photo-count {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    color: white;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 10px;
+}
+
+.photo-placeholder {
+    background: linear-gradient(135deg, #e6f0ff 0%, #f0e6ff 100%);
+    color: #2a5298;
+    text-align: center;
+    padding: 30px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    border: 1px dashed #2a5298;
+}
+
+.listing-popup {
+    max-width: 320px;
+    font-size: 14px;
+}
+
+.listing-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #1e3c72;
+}
+
+.listing-price {
+    color: #6a11cb;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.details-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.details-btn:hover {
+    background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+}
+
+/* Sarlavha (Header) */
+.header {
+    text-align: center;
+    padding: 10px 12px;
+    color: white;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #6a11cb 100%);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.header h1 {
+    font-size: 1.3rem;
+    margin-bottom: 3px;
+}
+
+.header p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* Yuklanish animatsiyasi */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 12px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Xatolik oynasi */
+.error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ffffff 0%, #f0e6ff 100%);
+    color: #1e3c72;
+    padding: 18px;
+    border-radius: 10px;
+    width: 85%;
+    max-width: 300px;
+    box-shadow: 0 5px 20px rgba(30, 60, 114, 0.3);
+    text-align: center;
+    z-index: 1000;
+    border: 1px solid #2a5298;
+}
+
+.error button {
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.error button:hover {
+    background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Yangilash tugmasi */
+.refresh-btn {
+    position: absolute;
+    top: 65px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    box-shadow: 0 3px 10px rgba(30, 60, 114, 0.3);
+    z-index: 1000;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    color: white;
+}
+
+.refresh-btn:active {
+    transform: scale(0.9);
+}
+
+/* Popup dizayni */
+.leaflet-popup-content {
+    min-width: 260px;
+    max-width: 300px;
+    margin: 10px;
+}
+
+.listing-popup {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+}
+
+.listing-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #1e3c72;
+    margin-bottom: 4px;
+    border-left: 4px solid #6a11cb;
+    padding-left: 6px;
+}
+
+.listing-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #6a11cb;
+    margin: 6px 0;
+}
+
+.listing-info {
+    margin: 5px 0;
+    color: #2a5298;
+    line-height: 1.3;
+}
+
+.listing-info strong {
+    color: #1e3c72;
+}
+
+.details-btn {
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+}
+
+.details-btn:active {
+    background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+}
+
+/* Telegram oynasi */
+.telegram-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(30, 60, 114, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    z-index: 3000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f0e6ff 100%);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid #2a5298;
+}
+
+.telegram-link {
+    background: linear-gradient(135deg, #e6f0ff 0%, #f0e6ff 100%);
+    border: 1px solid #2a5298;
+    border-radius: 8px;
+    padding: 10px;
+    word-break: break-all;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.telegram-link a {
+    color: #6a11cb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.copy-btn, .close-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 15px;
+    color: white;
+    width: 100%;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+}
+
+.close-btn {
+    background: linear-gradient(135deg, #6a11cb 0%, #8a2be2 100%);
+}
+
+.copy-btn:hover {
+    background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+}
+
+.close-btn:hover {
+    background: linear-gradient(135deg, #5a0cb0 0%, #7a1be2 100%);
+}
+
+.photos-gallery {
+    margin-top: 10px;
+}
+
+.photos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+}
+
+.photo-item {
+    width: 100%;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e6f0ff 0%, #f0e6ff 100%);
+    border: 1px solid #2a5298;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(30, 60, 114, 0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-modal.active {
+    display: flex;
+}
+
+.modal-content img {
+    max-width: 95%;
+    max-height: 85vh;
+    border-radius: 8px;
+    border: 2px solid #6a11cb;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    border: none;
+    color: white;
+    font-size: 22px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+@media (max-width: 360px) {
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .header p {
+        font-size: 0.8rem;
+    }
+
+    .listing-title {
+        font-size: 0.95rem;
+    }
+
+    .details-btn, .copy-btn, .close-btn {
+        font-size: 14px;
+    }
+
+    .photo-item {
+        height: 90px;
+    }
+}
+
+.call-btn, .telegram-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.call-btn,
+.telegram-btn {
+    color: #fff !important;
+}
+
+.call-btn:hover,
+.telegram-btn:hover {
+    color: #fff !important;
+    background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+}
+
+.call-btn:visited,
+.telegram-btn:visited {
+    color: #fff !important;
+}
+
+.telegram-btn {
+    background: linear-gradient(135deg, #6a11cb 0%, #8a2be2 100%);
+}
+
+.telegram-btn:hover {
+    background: linear-gradient(135deg, #5a0cb0 0%, #7a1be2 100%);
+}
+
+.call-btn:active,
+.telegram-btn:active {
+    opacity: 0.8;
+}
+
+.listing-description {
+    max-height: 3.9em;
+    overflow: hidden;
+    position: relative;
+    line-height: 1.3em;
+    color: #2a5298;
+}
+
+.listing-description.expanded {
+    max-height: none;
+}
+
+.read-more-btn {
+    color: #6a11cb;
+    font-size: 13px;
+    margin-top: 6px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.call-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #2a5298 0%, #6a11cb 100%);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(30, 60, 114, 0.3);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.call-btn:hover {
+  background: linear-gradient(135deg, #1e3c72 0%, #5a0cb0 100%);
+  transform: scale(1.03);
+}
+
+/* Telegram dark mode */
+body.telegram-dark {
+    background: linear-gradient(135deg, #0f1c3c 0%, #1a2d5c 50%, #4a0d8c 100%);
+}
+
+body.telegram-dark .header {
+    background: linear-gradient(135deg, #0f1c3c 0%, #1a2d5c 50%, #4a0d8c 100%);
+}
+
+body.telegram-dark #map {
+    background: linear-gradient(135deg, #0a1429 0%, #151f3c 100%);
+}
+
+body.telegram-dark .custom-marker div {
+    background: linear-gradient(135deg, #1a2d5c 0%, #4a0d8c 100%) !important;
+}
+.header h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.title-text {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  
+  /* eng muhim — Instagramdagi bubble soyasi */
+  text-shadow:
+    0 3px 6px rgba(30, 60, 114, 0.35),
+    0 0 10px rgba(106, 17, 203, 0.25);
+  
+  /* biroz silliqroq chiqishi uchun */
+  filter: brightness(1.05);
+}
+
+
+
+/* 🔄 Refresh tugmasi uchun rasmli dizayn */
+.refresh-btn {
+    position: absolute;
+    top: 65px;
+    right: 12px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.15); /* yengil shaffof fon */
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(30, 60, 114, 0.4);
+    cursor: pointer;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.refresh-btn:active {
+    transform: scale(0.9);
+}
+
+/* Rasm o‘lchami va moslashuvi */
+.refresh-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    opacity: 0.9;
+    transition: transform 0.4s ease-in-out;
+}
+
+.refresh-btn:active .refresh-icon {
+    transform: rotate(360deg); /* bosilganda aylanish animatsiyasi */
+}
