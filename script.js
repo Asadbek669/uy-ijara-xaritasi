@@ -13,6 +13,7 @@ let markers = [];
 let markerCluster;
 
 // Xaritani ishga tushirish
+// Xaritani ishga tushirish
 function initMap() {
     // O'zbekiston markazi
     const defaultCenter = [41.2995, 69.2401];
@@ -42,9 +43,6 @@ function initMap() {
     });
     retinaTiles.addTo(map);
 
-
-
-
     // Marker cluster guruhi
     markerCluster = L.markerClusterGroup({
         chunkedLoading: true,
@@ -59,9 +57,34 @@ function initMap() {
     map.scrollWheelZoom.disable(); // ixtiyoriy — mobil uchun foydali
     map.invalidateSize();
 
+    // === ✅ Foydalanuvchi joylashuvi (lat/lon orqali kirganda) ===
+    const params = new URLSearchParams(window.location.search);
+    const lat = parseFloat(params.get("lat"));
+    const lon = parseFloat(params.get("lon"));
+
+    if (!isNaN(lat) && !isNaN(lon)) {
+        // 🔵 Ko‘k marker icon (klassik marker rasmi)
+        const userIcon = L.icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png", // ko‘k marker rasmi
+            iconSize: [38, 38],
+            iconAnchor: [19, 38],
+            popupAnchor: [0, -35]
+        });
+
+        // Marker yaratish
+        const userMarker = L.marker([lat, lon], { icon: userIcon }).addTo(map);
+
+        // Popup bog‘lash
+        userMarker.bindPopup("<b>Siz turgan joylashuv</b>").openPopup();
+
+        // Xarita markazini foydalanuvchiga o‘tkazish
+        map.setView([lat, lon], 14);
+    }
+
     // E'lonlarni yuklash
     loadListings();
 }
+
 
 
 // Rasm URL olish
@@ -451,6 +474,7 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+
 
 
 
