@@ -469,11 +469,6 @@ function debugPhotos() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    initMap();
-    window.debugPhotos = debugPhotos;
-});
-
 
 function toggleDescription(id) {
     const desc = document.getElementById(`desc-${id}`);
@@ -554,3 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+    window.debugPhotos = debugPhotos;
+});
