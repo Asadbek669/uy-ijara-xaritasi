@@ -1,29 +1,25 @@
-// API base URL
+// 🌍 API bazaviy URL
 const API_BASE = 'https://backend-api-rtej.onrender.com/api';
-// URL orqali user_id kelsa – localStorage ga saqlaymiz
+
+// 🔐 URL orqali user_id kelsa — saqlaymiz
 const urlParams = new URLSearchParams(window.location.search);
 const tgUserId = urlParams.get("user_id");
-if (tgUserId) {
-    localStorage.setItem("tg_user_id", tgUserId);
-}
+if (tgUserId) localStorage.setItem("tg_user_id", tgUserId);
 
-// Global o'zgaruvchilar
+// 🌍 Global o‘zgaruvchilar
 let map;
 let markers = [];
 let markerCluster;
 
-// Xaritani ishga tushirish
-// Xaritani ishga tushirish
+// 🗺️ Xaritani ishga tushirish
 function initMap() {
-    // O'zbekiston markazi
     const defaultCenter = [41.2995, 69.2401];
 
-    // Xaritani yaratish (retina uchun optimizatsiya)
+    // Leaflet xarita sozlamalari
     map = L.map('map', {
         preferCanvas: true,
         zoomSnap: 0.25,
         zoomDelta: 0.5,
-        wheelPxPerZoomLevel: 80,
         zoomControl: true,
         attributionControl: true,
         zoomAnimation: true,
@@ -31,71 +27,59 @@ function initMap() {
         inertia: true,
         inertiaDeceleration: 2500,
     }).setView(defaultCenter, 12);
-    
-    // Retina uchun maxsimal tiniqlik
+
+    // Retina (2×) uchun yuqori sifatli tile
     const retinaTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 20,
-        tileSize: 512,          // 2× sifatli rasm yuklaydi
-        zoomOffset: -1,         // to‘g‘ri zoomni beradi
-        detectRetina: true,     // retina ekranlarni avtomatik aniqlaydi
-        crossOrigin: true,      // renderda tiniqlik uchun muhim
+        tileSize: 512,
+        zoomOffset: -1,
+        detectRetina: true,
+        crossOrigin: true,
         attribution: '&copy; OpenStreetMap contributors'
     });
     retinaTiles.addTo(map);
 
-    // Marker cluster guruhi
+    // Marker klaster guruhi
     markerCluster = L.markerClusterGroup({
         chunkedLoading: true,
         maxClusterRadius: 50
     });
-
     map.addLayer(markerCluster);
 
-    // Mobil uchun silliq zoom va touch optimizatsiya
     map.touchZoom.enable();
     map.doubleClickZoom.enable();
-    map.scrollWheelZoom.disable(); // ixtiyoriy — mobil uchun foydali
+    map.scrollWheelZoom.disable();
     map.invalidateSize();
 
-    // === ✅ Foydalanuvchi joylashuvi (lat/lon orqali kirganda) ===
+    // Agar URLda lat/lon kelsa
     const params = new URLSearchParams(window.location.search);
     const lat = parseFloat(params.get("lat"));
     const lon = parseFloat(params.get("lon"));
 
     if (!isNaN(lat) && !isNaN(lon)) {
-        // 🔵 Ko‘k marker icon (klassik marker rasmi)
         const userIcon = L.icon({
-            iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", // ko‘k marker rasmi
-            iconSize: [25, 41],  
+            iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+            iconSize: [25, 41],
             iconAnchor: [19, 38],
             popupAnchor: [0, -35]
         });
 
-        // Marker yaratish
         const userMarker = L.marker([lat, lon], { icon: userIcon }).addTo(map);
-
-        // Popup bog‘lash
-        userMarker.bindPopup(`<div style="text-align:center;"><b>Siz turgan joylashuv</b></div>`);
-
-        // Xarita markazini foydalanuvchiga o‘tkazish
+        userMarker.bindPopup(`<div style="text-align:center;"><b>Siz turgan joy</b></div>`);
         map.setView([lat, lon], 14);
     }
 
-    // E'lonlarni yuklash
+    // 🔄 Backend e’lonlarini yuklaymiz
     loadListings();
 }
 
-
-
-// Rasm URL olish
+// 📸 Rasm URL generatori
 function getPhotoUrl(fileId) {
-    if (!fileId) {
-        return 'https://via.placeholder.com/150/3498db/ffffff?text=Rasm+Yoq';
-    }
+    if (!fileId) return 'https://via.placeholder.com/150/3498db/ffffff?text=Rasm+Yoq';
     return `${API_BASE}/photos/${encodeURIComponent(fileId)}`;
 }
 
-// E'lonlarni API dan olish
+// 🏠 E’lonlarni API dan olish
 async function loadListings() {
     const params = new URLSearchParams(window.location.search);
     const lat = params.get("lat");
@@ -103,7 +87,6 @@ async function loadListings() {
     const radius = params.get("radius") || 20;
 
     let url = `${API_BASE}/listings`;
-
     if (lat && lon) {
         url = `${API_BASE}/listings/nearby?lat=${lat}&lon=${lon}&radius_km=${radius}`;
         map.setView([parseFloat(lat), parseFloat(lon)], 13);
@@ -112,80 +95,66 @@ async function loadListings() {
     try {
         const response = await fetch(url);
         const data = await response.json();
-
-        // ✅ har ikki formatni qo‘llaydigan universal forma
         const listings = Array.isArray(data) ? data : data.listings;
-		displayListings(listings);
-		hideLoading();
 
-        if (!Array.isArray(listings) || listings.length === 0) {
-            console.warn("⚠️ E'lonlar topilmadi yoki noto‘g‘ri format");
-            return;
-        }
+        displayListings(listings);
+        hideLoading();
 
+        if (!listings || listings.length === 0)
+            console.warn("⚠️ E’lonlar topilmadi yoki format noto‘g‘ri");
 
-
-    } catch (error) {
-        console.error("🚫 Xarita yuklashda xatolik:", error);
+    } catch (err) {
+        console.error("🚫 E’lonlarni yuklashda xatolik:", err);
+        showError();
     }
 }
 
+// 🧠 Saqlash (Telegram botga yuborish)
 function saveListing(listingId) {
     const userId = localStorage.getItem("tg_user_id");
-
-    if (!userId) {
-        alert("❗Avval Telegram orqali oching!");
-        return;
-    }
+    if (!userId) return alert("❗Avval Telegram orqali oching!");
 
     fetch(`${API_BASE}/save-listing/${listingId}`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userId }),
     })
-    .then(res => res.json())
-    .then(data => {
-        alert("✅ E’lon Telegramga yuborildi!");
-    })
-    .catch(() => alert("❌ Xato! Qayta urinib ko‘ring"));
+        .then(res => res.json())
+        .then(() => alert("✅ E’lon Telegramga yuborildi!"))
+        .catch(() => alert("❌ Xato! Qayta urinib ko‘ring"));
 }
 
-
-
-// E'lonlarni xaritada ko'rsatish
+// 🧭 E’lonlarni xaritada ko‘rsatish
 function displayListings(listings) {
-    // Eski markerlarni tozalash
     markerCluster.clearLayers();
     markers = [];
-    
-    if (listings.length === 0) {
+
+    if (!listings || listings.length === 0) {
         updateStats(0);
         return;
     }
-    
-    // Har bir e'lon uchun marker yaratish
+
     listings.forEach(listing => {
         const marker = createMarker(listing);
         markers.push(marker);
         markerCluster.addLayer(marker);
     });
-    
-    // Xaritani markerlar joylashganiga moslashtirish
+
     if (markers.length > 0) {
         const group = new L.featureGroup(markers);
         map.fitBounds(group.getBounds(), { padding: [20, 20] });
     }
-    
+
     updateStats(listings.length);
+
+    // ✅ Yangi slayderlar uchun “dot” indikatorlarni qayta ishga tushirish
+    setTimeout(initPhotoSliders, 300);
 }
 
-// Marker yaratish
+// 📍 Marker yaratish
 function createMarker(listing) {
     const { latitude, longitude, title, price } = listing;
-    
-    // Marker icon
+
     const icon = L.divIcon({
         html: `
             <div style="
@@ -197,283 +166,109 @@ function createMarker(listing) {
                 font-size: 14px;
                 border: 3px solid white;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-                white-space: nowrap;
-            ">
+                white-space: nowrap;">
                 ${formatPrice(price)} ${listing.currency || "so'm"}
-
-            </div>
-        `,
+            </div>`,
         className: 'custom-marker',
         iconSize: [100, 40],
         iconAnchor: [50, 40]
     });
-    
-    // Marker yaratish
+
     const marker = L.marker([latitude, longitude], { icon });
-    
-    // Popup content
-    const popupContent = createPopupContent(listing);
-    
-    marker.bindPopup(popupContent, {
-        maxWidth: 400,
-        className: 'custom-popup',
-        minWidth: 300
-    });
-    
+    marker.bindPopup(createPopupContent(listing), { maxWidth: 400, className: 'custom-popup', minWidth: 300 });
     return marker;
 }
 
+// ☎️ Telefon raqamiga qo‘ng‘iroq qilish
 function callNumber(phone) {
     const tg = window.Telegram?.WebApp;
-
-    if (tg && typeof tg.openLink === "function") {
-        // ✅ Telegram WebApp ichida ishlaydi
-        tg.openLink(`tel:${phone}`);
-    } else {
-        // 🌐 Oddiy brauzerda ishlaydi
-        window.location.href = `tel:${phone}`;
-    }
+    if (tg && typeof tg.openLink === "function") tg.openLink(`tel:${phone}`);
+    else window.location.href = `tel:${phone}`;
 }
 
-
-// Popup content yaratish
+// 🪟 Popup content
 function createPopupContent(listing) {
-    const {
-        id, title, price, description, photos,
-        owner_name, phone, distance_km,
-        total_floors, floor_number
-    } = listing;
-
+    const { id, title, price, description, photos, phone, total_floors, floor_number, distance_km } = listing;
     const phoneDisplay = phone ? `+998${phone.replace(/^(\+?998)?/, '')}` : "No'malum";
     const callButton = phone
-        ? `<a href="tel:${phoneDisplay}" target="_blank" class="call-btn">📞 Qo‘ng‘iroq qilish</a>`
+        ? `<a href="tel:${phoneDisplay}" target="_blank" class="call-btn">📞 Qo‘ng‘iroq</a>`
         : '';
 
-    const shortDesc = escapeHtml(description || "Tavsif mavjud emas");
     const descHTML = `
         <div class="listing-description" id="desc-${id}">
-            ${shortDesc}
+            ${escapeHtml(description || "Tavsif mavjud emas")}
         </div>
         <span class="read-more-btn" onclick="toggleDescription(${id})">Batafsil…</span>
     `;
 
-    // 🏙 Qo‘shimcha ma’lumotlar (pastda chiqadi)
     const extraInfo = `
         <div class="listing-extra">
             🏢 <b>Qavat:</b> ${floor_number || '-'} / ${total_floors || '-'}<br>
-            ${distance_km ? `📍 <b>Masofa:</b> ${distance_km} km uzoqlikda<br>` : ''}
-            🆔 <b>E’lon ID:</b> ${id}
+            ${distance_km ? `📍 <b>Masofa:</b> ${distance_km} km<br>` : ''}
+            🆔 <b>ID:</b> ${id}
         </div>
     `;
 
     let photosHTML = '';
     if (photos && photos.length > 0) {
         photosHTML = `
-			<div class="photos-gallery">
-			  <div class="photos-slider" data-total="${photos.length}">
-			    ${photos.map((photo, i) => `
-			      <img src="${getPhotoUrl(photo)}" data-index="${i}" loading="lazy"
-			      onerror="this.src='https://via.placeholder.com/300x200?text=Rasm+Yuklanmadi'">
-			    `).join('')}
-			  </div>
-			  <div class="dots-container">
-			    ${photos.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
-			  </div>
-			</div>
-        `;
+          <div class="photos-gallery">
+            <div class="photos-slider" data-total="${photos.length}">
+              ${photos.map((p, i) => `<img src="${getPhotoUrl(p)}" data-index="${i}" loading="lazy"
+              onerror="this.src='https://via.placeholder.com/300x200?text=Rasm+Yuklanmadi'">`).join('')}
+            </div>
+            <div class="dots-container">
+              ${photos.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}"></span>`).join('')}
+            </div>
+          </div>`;
     }
 
     return `
-        <div class="listing-popup">
-            <div class="listing-title">${escapeHtml(title)}</div>
-            <div class="listing-price">
-				${formatPrice(price)} ${listing.currency || "so'm"} / oy
-			</div>
-
-            ${descHTML}
-            ${extraInfo} <!-- ✅ qo‘shimcha ma’lumotlar shu yerda -->
-            ${photosHTML}
-
-            ${callButton}
-
-            <button class="telegram-btn" onclick="saveListing(${id})">
-                💾 E’lonni saqlash
-            </button>
-        </div>
-    `;
+      <div class="listing-popup">
+        <div class="listing-title">${escapeHtml(title)}</div>
+        <div class="listing-price">${formatPrice(price)} ${listing.currency || "so'm"} / oy</div>
+        ${descHTML}
+        ${extraInfo}
+        ${photosHTML}
+        ${callButton}
+        <button class="telegram-btn" onclick="saveListing(${id})">💾 E’lonni saqlash</button>
+      </div>`;
 }
 
+// 📸 Slider va dot indikatorni initsializatsiya
+function initPhotoSliders() {
+  document.querySelectorAll(".photos-slider").forEach(slider => {
+    const dots = slider.parentElement.querySelectorAll(".dot");
+    const slideWidth = slider.clientWidth;
 
+    let startX = 0, scrollStart = 0, isDragging = false;
 
-// Batafsil ma'lumot ko'rsatish
-function showListingDetails(listingId) {
-    // Telegram bot orqali ma'lumot yuborish
-    const telegramBotUrl = `https://t.me/testuchun878_bot?start=listing_${listingId}`;
-    
-    // Yangi oynada ochish yoki foydalanuvchiga ko'rsatish
-    const userChoice = confirm(
-        "Batafsil ma'lumot olish uchun Telegram botga yo'naltirilmoqdasiz. Davom etasizmi?"
-    );
-    
-    if (userChoice) {
-        window.open(telegramBotUrl, '_blank');
-        
-        // Yoki foydalanuvchiga linkni ko'rsatish
-        showTelegramLink(listingId);
-    }
+    slider.addEventListener("touchstart", e => {
+      isDragging = true;
+      startX = e.touches[0].pageX;
+      scrollStart = slider.scrollLeft;
+    });
+
+    slider.addEventListener("touchmove", e => {
+      if (!isDragging) return;
+      const moveX = e.touches[0].pageX - startX;
+      slider.scrollLeft = scrollStart - moveX;
+    });
+
+    slider.addEventListener("touchend", () => {
+      isDragging = false;
+      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
+      slider.scrollTo({ left: nearest, behavior: "smooth" });
+      const index = Math.round(nearest / slideWidth);
+      dots.forEach((d, i) => d.classList.toggle("active", i === index));
+    });
+  });
 }
 
-// Telegram linkini ko'rsatish
-function showTelegramLink(listingId) {
-    const telegramUrl = `https://t.me/testuchun878_bot?start=listing_${listingId}`;
-    
-    // Modal yoki alert orqali linkni ko'rsatish
-    const modal = document.createElement('div');
-    modal.className = 'telegram-modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <h3>📋 Batafsil ma'lumot olish</h3>
-            <p>Quyidagi linkni Telegram'da oching yoki botga <code>/start listing_${listingId}</code> deb yozing:</p>
-            <div class="telegram-link">
-                <a href="${telegramUrl}" target="_blank">${telegramUrl}</a>
-            </div>
-            <button onclick="copyTelegramLink('${telegramUrl}')" class="copy-btn">
-                📋 Linkni nusxalash
-            </button>
-            <button onclick="closeModal()" class="close-btn">Yopish</button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Modalga style qo'shish
-    const style = document.createElement('style');
-    style.textContent = `
-        .telegram-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-        .telegram-link {
-            margin: 15px 0;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            word-break: break-all;
-        }
-        .telegram-link a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        .copy-btn, .close-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        .close-btn {
-            background: #e74c3c;
-        }
-        .copy-btn:hover {
-            background: #2980b9;
-        }
-        .close-btn:hover {
-            background: #c0392b;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-
-
-// Modalni yopish
-function closeModal() {
-    const modal = document.querySelector('.telegram-modal');
-    if (modal) {
-        modal.remove();
-    }
-}
-
-// Narxni formatlash
-function formatPrice(price) {
-    return new Intl.NumberFormat('uz-UZ').format(Math.round(price));
-}
-
-// HTML escape qilish
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Statistikani yangilash
-function updateStats(count) {
-    const statsElement = document.getElementById('stats');
-    statsElement.textContent = `Jami ${count} ta e'lon`;
-}
-
-// Loading ko'rsatkichlari
-function showLoading() {
-    document.getElementById('loading').classList.remove('hidden');
-}
-
-function hideLoading() {
-    document.getElementById('loading').classList.add('hidden');
-}
-
-// Xatolik ko'rsatkichlari
-function showError() {
-    document.getElementById('error').classList.remove('hidden');
-}
-
-function hideError() {
-    document.getElementById('error').classList.add('hidden');
-}
-
-// Debug funksiyasi
-function debugPhotos() {
-    fetch(`${API_BASE}/listings`)
-        .then(response => response.json())
-        .then(listings => {
-            console.log('=== DEBUG PHOTOS ===');
-            listings.forEach((listing, index) => {
-                console.log(`Listing ${index + 1}:`, listing.title);
-                console.log('Photos:', listing.photos);
-                if (listing.photos) {
-                    listing.photos.forEach((photo, photoIndex) => {
-                        const url = getPhotoUrl(photo);
-                        console.log(`Photo ${photoIndex + 1}:`, url);
-                    });
-                }
-            });
-        });
-}
-
-
-
+// 🔤 Yordamchi funksiyalar
 function toggleDescription(id) {
     const desc = document.getElementById(`desc-${id}`);
     const btn = event.target;
-
     if (desc.classList.contains("expanded")) {
         desc.classList.remove("expanded");
         btn.textContent = "Batafsil…";
@@ -483,73 +278,28 @@ function toggleDescription(id) {
     }
 }
 
-// === 📸 Faqat bitta rasm o'tishi va nuqtali indikator ===
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".photos-slider").forEach(slider => {
-    const dots = slider.parentElement.querySelectorAll(".dot");
-    const slideWidth = slider.clientWidth;
+function formatPrice(price) {
+    return new Intl.NumberFormat('uz-UZ').format(Math.round(price || 0));
+}
 
-    let startX = 0;
-    let scrollStart = 0;
-    let isDragging = false;
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
 
-    // 👉 Touch start
-    slider.addEventListener("touchstart", e => {
-      isDragging = true;
-      startX = e.touches[0].pageX;
-      scrollStart = slider.scrollLeft;
-    });
+function updateStats(count) {
+    const statsElement = document.getElementById('stats');
+    if (statsElement) statsElement.textContent = `Jami ${count} ta e'lon`;
+}
 
-    // 👉 Touch move
-    slider.addEventListener("touchmove", e => {
-      if (!isDragging) return;
-      const moveX = e.touches[0].pageX - startX;
-      slider.scrollLeft = scrollStart - moveX;
-    });
+function showLoading() { document.getElementById('loading')?.classList.remove('hidden'); }
+function hideLoading() { document.getElementById('loading')?.classList.add('hidden'); }
+function showError() { document.getElementById('error')?.classList.remove('hidden'); }
+function hideError() { document.getElementById('error')?.classList.add('hidden'); }
 
-    // 👉 Touch end
-    slider.addEventListener("touchend", () => {
-      isDragging = false;
-      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
-      slider.scrollTo({ left: nearest, behavior: "smooth" });
-
-      // 🔘 nuqtalarni yangilash
-      const index = Math.round(nearest / slideWidth);
-      dots.forEach((d, i) => d.classList.toggle("active", i === index));
-    });
-
-    // 💻 Mouse (kompyuter) uchun
-    let isDown = false;
-    let start = 0;
-    let scrollLeft = 0;
-
-    slider.addEventListener("mousedown", e => {
-      isDown = true;
-      start = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener("mouseleave", () => isDown = false);
-    slider.addEventListener("mouseup", () => {
-      if (!isDown) return;
-      isDown = false;
-      const nearest = Math.round(slider.scrollLeft / slideWidth) * slideWidth;
-      slider.scrollTo({ left: nearest, behavior: "smooth" });
-      const index = Math.round(nearest / slideWidth);
-      dots.forEach((d, i) => d.classList.toggle("active", i === index));
-    });
-
-    slider.addEventListener("mousemove", e => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - start);
-      slider.scrollLeft = scrollLeft - walk;
-    });
-  });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+// 🧩 DOM yuklanganda ishga tushirish
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("🌍 DOM yuklandi — xarita ishga tushmoqda...");
     initMap();
-    window.debugPhotos = debugPhotos;
 });
