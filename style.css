@@ -686,17 +686,18 @@ body.telegram-dark .custom-marker div {
 
 /* 📸 Slayder sezgirlikni sozlash */
 .photos-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-snap-stop: always;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    gap: 0;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x pinch-zoom;
-    scrollbar-width: none;
-    cursor: grab;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-stop: always;
+  gap: 0;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  cursor: grab;
+  scrollbar-width: none;
+  transition: scroll-left 0.3s ease-in-out;
 }
 
 .photos-slider:active {
@@ -743,4 +744,5 @@ body.telegram-dark .custom-marker div {
     scroll-behavior: smooth;
     transition: scroll-behavior 0.3s ease;
 }
+
 
