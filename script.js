@@ -339,8 +339,10 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+// 📸 Slayderni silliq harakatli va indikatorli qilish
 function initPhotoSlidersFor(container) {
   const galleries = container.querySelectorAll(".photos-gallery");
+
   galleries.forEach(gallery => {
     const slider = gallery.querySelector(".photos-slider");
     const dots = gallery.querySelectorAll(".dot");
@@ -348,7 +350,9 @@ function initPhotoSlidersFor(container) {
 
     let isDragging = false;
     let startX = 0;
-    let scrollLeft = 0;
+    let scrollStart = 0;
+    let velocity = 0;
+    let momentumID;
     let slideWidth = slider.querySelector("img")?.clientWidth || slider.clientWidth;
 
     const setActiveDot = (index) => {
@@ -357,33 +361,61 @@ function initPhotoSlidersFor(container) {
 
     const updateDots = () => {
       slideWidth = slider.querySelector("img")?.clientWidth || slider.clientWidth;
-      const activeIndex = Math.round(slider.scrollLeft / slideWidth);
-      setActiveDot(activeIndex);
+      const index = Math.round(slider.scrollLeft / slideWidth);
+      setActiveDot(index);
     };
 
+    // 🔹 Inertia (momentum) effektini qo‘llash
+    const applyMomentum = () => {
+      if (Math.abs(velocity) < 0.05) return;
+      slider.scrollLeft -= velocity;
+      velocity *= 0.95; // pasaytirish (friction)
+      momentumID = requestAnimationFrame(applyMomentum);
+      updateDots();
+    };
+
+    // --- Touch boshlandi ---
     slider.addEventListener("touchstart", (e) => {
       isDragging = true;
       startX = e.touches[0].pageX;
-      scrollLeft = slider.scrollLeft;
+      scrollStart = slider.scrollLeft;
+      velocity = 0;
+      cancelAnimationFrame(momentumID);
       slider.style.scrollBehavior = "auto";
-    });
+    }, { passive: true });
 
+    // --- Touch davomida ---
     slider.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
       const x = e.touches[0].pageX;
-      const walk = (x - startX) * 1.5;
-      slider.scrollLeft = scrollLeft - walk;
-      requestAnimationFrame(updateDots);
-    });
+      const diff = x - startX;
 
+      // 🧩 Sezgirlikni kamaytirish — “yumshoqlik” uchun
+      slider.scrollLeft = scrollStart - diff * 0.8;
+
+      // Tezlikni hisoblash
+      velocity = (diff * 0.1);
+      updateDots();
+    }, { passive: true });
+
+    // --- Touch tugadi ---
     slider.addEventListener("touchend", () => {
       isDragging = false;
+      slider.style.scrollBehavior = "smooth";
+
+      // 🔹 Eng yaqin rasmga o'tkazamiz
       const activeIndex = Math.round(slider.scrollLeft / slideWidth);
       slider.scrollTo({ left: activeIndex * slideWidth, behavior: "smooth" });
+
       setActiveDot(activeIndex);
+
+      // 🔹 Momentumni (inertia) ishga tushiramiz
+      requestAnimationFrame(applyMomentum);
     });
 
+    // --- Scroll paytida indikator yangilansin ---
     slider.addEventListener("scroll", () => requestAnimationFrame(updateDots));
+
     setActiveDot(0);
   });
 }
@@ -413,5 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("🌍 DOM yuklandi — xarita ishga tushmoqda...");
     initMap();
 });
+
 
 
