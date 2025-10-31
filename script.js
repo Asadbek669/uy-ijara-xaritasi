@@ -15,7 +15,6 @@ let markerCluster;
 function initMap() {
     const defaultCenter = [41.2995, 69.2401];
 
-    // Leaflet xarita sozlamalari
     map = L.map('map', {
         preferCanvas: true,
         zoomSnap: 0.25,
@@ -28,7 +27,6 @@ function initMap() {
         inertiaDeceleration: 2500,
     }).setView(defaultCenter, 12);
 
-    // Retina (2×) uchun yuqori sifatli tile
     const retinaTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 20,
         tileSize: 512,
@@ -39,7 +37,6 @@ function initMap() {
     });
     retinaTiles.addTo(map);
 
-    // Marker klaster guruhi
     markerCluster = L.markerClusterGroup({
         chunkedLoading: true,
         maxClusterRadius: 50
@@ -51,7 +48,6 @@ function initMap() {
     map.scrollWheelZoom.disable();
     map.invalidateSize();
 
-    // Agar URLda lat/lon kelsa
     const params = new URLSearchParams(window.location.search);
     const lat = parseFloat(params.get("lat"));
     const lon = parseFloat(params.get("lon"));
@@ -69,9 +65,23 @@ function initMap() {
         map.setView([lat, lon], 14);
     }
 
-    // 🔄 Backend e’lonlarini yuklaymiz
+    // 📦 Backenddan e’lonlarni yuklash
     loadListings();
+
+    // ✅ Popup ochilganda indikatorni to‘g‘ri ishga tushirish
+    map.on('popupopen', (e) => {
+        const popupEl = e.popup.getElement();
+        if (!popupEl) return;
+
+        // Leaflet popup content elementi
+        const content = popupEl.querySelector('.leaflet-popup-content');
+        if (!content) return;
+
+        console.log("📸 Popup ochildi — slayderni ishga tushiryapmiz...");
+        initPhotoSlidersFor(content);
+    });
 }
+
 
 // 📸 Rasm URL generatori
 function getPhotoUrl(fileId) {
@@ -148,7 +158,7 @@ function displayListings(listings) {
     updateStats(listings.length);
 
     // ✅ Yangi slayderlar uchun “dot” indikatorlarni qayta ishga tushirish
-    setTimeout(initPhotoSliders, 300);
+    
 }
 
 // 📍 Marker yaratish
@@ -329,6 +339,54 @@ function toggleDescription(id) {
         btn.textContent = "Yopish";
     }
 }
+function initPhotoSlidersFor(container) {
+  const galleries = container.querySelectorAll(".photos-gallery");
+  galleries.forEach(gallery => {
+    const slider = gallery.querySelector(".photos-slider");
+    const dots = gallery.querySelectorAll(".dot");
+    if (!slider || dots.length === 0) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let slideWidth = slider.querySelector("img")?.clientWidth || slider.clientWidth;
+
+    const setActiveDot = (index) => {
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+    };
+
+    const updateDots = () => {
+      slideWidth = slider.querySelector("img")?.clientWidth || slider.clientWidth;
+      const activeIndex = Math.round(slider.scrollLeft / slideWidth);
+      setActiveDot(activeIndex);
+    };
+
+    slider.addEventListener("touchstart", (e) => {
+      isDragging = true;
+      startX = e.touches[0].pageX;
+      scrollLeft = slider.scrollLeft;
+      slider.style.scrollBehavior = "auto";
+    });
+
+    slider.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const x = e.touches[0].pageX;
+      const walk = (x - startX) * 1.5;
+      slider.scrollLeft = scrollLeft - walk;
+      requestAnimationFrame(updateDots);
+    });
+
+    slider.addEventListener("touchend", () => {
+      isDragging = false;
+      const activeIndex = Math.round(slider.scrollLeft / slideWidth);
+      slider.scrollTo({ left: activeIndex * slideWidth, behavior: "smooth" });
+      setActiveDot(activeIndex);
+    });
+
+    slider.addEventListener("scroll", () => requestAnimationFrame(updateDots));
+    setActiveDot(0);
+  });
+}
 
 function formatPrice(price) {
     return new Intl.NumberFormat('uz-UZ').format(Math.round(price || 0));
@@ -355,4 +413,5 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("🌍 DOM yuklandi — xarita ishga tushmoqda...");
     initMap();
 });
+
 
