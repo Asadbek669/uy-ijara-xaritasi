@@ -1,5 +1,5 @@
 // 🌍 API bazaviy URL
-const API_BASE = 'https://backend-api-rtej.onrender.com/api';
+const API_BASE = 'https://backend-api-v4q2ba.fly.dev/api';
 
 // 🔐 URL orqali user_id kelsa — saqlaymiz
 const urlParams = new URLSearchParams(window.location.search);
@@ -413,3 +413,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("🌍 DOM yuklandi — xarita ishga tushmoqda...");
     initMap();
 });
+
